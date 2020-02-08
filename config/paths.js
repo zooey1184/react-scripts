@@ -10,16 +10,21 @@
 
 const path = require('path');
 const fs = require('fs');
-const getPublicUrlOrPath = require('react-dev-utils/getPublicUrlOrPath');
+const url = require('url');
 
+// Make sure any symlinks in the project folder are resolved:
+// https://github.com/facebook/create-react-app/issues/637
+const appDirectory = fs.realpathSync(process.cwd());
+const resolveApp = relativePath => path.resolve(appDirectory, relativePath);
+
+const envPublicUrl = process.env.PUBLIC_URL;
 
 /**
- * **************************************************************
+ * output config start
  * reactConfig 独立的配置
  * outputDir 导出目录
  * publicPath 资源路径 配置生产环境 默认 /
  */
-let envPublicUrl;
 const outputConfig = (p)=> {
   const isoutputdir = fs.existsSync(p)
   let config;
@@ -46,12 +51,21 @@ const outputConfig = (p)=> {
   }
 }
 const {outputdir, proxyReactConfig} = outputConfig(resolveApp('react.config.js'))
-/******************* react config end *******************/
+/********************** output config end **************************/
 
-// Make sure any symlinks in the project folder are resolved:
-// https://github.com/facebook/create-react-app/issues/637
-const appDirectory = fs.realpathSync(process.cwd());
-const resolveApp = relativePath => path.resolve(appDirectory, relativePath);
+function ensureSlash(inputPath, needsSlash) {
+  const hasSlash = inputPath.endsWith('/');
+  if (hasSlash && !needsSlash) {
+    return inputPath.substr(0, inputPath.length - 1);
+  } else if (!hasSlash && needsSlash) {
+    return `${inputPath}/`;
+  } else {
+    return inputPath;
+  }
+}
+
+const getPublicUrl = appPackageJson =>
+  envPublicUrl || require(appPackageJson).homepage;
 
 // We use `PUBLIC_URL` environment variable or "homepage" field to infer
 // "public path" at which the app is served.
@@ -59,12 +73,12 @@ const resolveApp = relativePath => path.resolve(appDirectory, relativePath);
 // single-page apps that may serve index.html for nested URLs like /todos/42.
 // We can't use a relative path in HTML because we don't want to load something
 // like /todos/42/static/js/bundle.7289d.js. We have to know the root.
-const P_URL = envPublicUrl || process.env.PUBLIC_URL;
-const publicUrlOrPath = getPublicUrlOrPath(
-  process.env.NODE_ENV === 'development',
-  require(resolveApp('package.json')).homepage,
-  P_URL
-);
+function getServedPath(appPackageJson) {
+  const publicUrl = getPublicUrl(appPackageJson);
+  const servedUrl =
+    envPublicUrl || (publicUrl ? url.parse(publicUrl).pathname : '/');
+  return ensureSlash(servedUrl, true);
+}
 
 const moduleFileExtensions = [
   'web.mjs',
@@ -111,7 +125,8 @@ module.exports = {
   proxySetup: resolveApp('src/setupProxy.js'),
   proxyReactConfig: proxyReactConfig,
   appNodeModules: resolveApp('node_modules'),
-  publicUrlOrPath,
+  publicUrl: getPublicUrl(resolveApp('package.json')),
+  servedPath: getServedPath(resolveApp('package.json')),
 };
 
 // @remove-on-eject-begin
@@ -135,7 +150,8 @@ module.exports = {
   proxySetup: resolveApp('src/setupProxy.js'),
   proxyReactConfig: proxyReactConfig,
   appNodeModules: resolveApp('node_modules'),
-  publicUrlOrPath,
+  publicUrl: getPublicUrl(resolveApp('package.json')),
+  servedPath: getServedPath(resolveApp('package.json')),
   // These properties only exist before ejecting:
   ownPath: resolveOwn('.'),
   ownNodeModules: resolveOwn('node_modules'), // This is empty on npm 3
@@ -155,12 +171,11 @@ if (
   __dirname.indexOf(path.join('packages', 'react-scripts', 'config')) !== -1
 ) {
   const templatePath = '../cra-template/template';
-  const beforePublishConfig = outputConfig(resolveOwn('react.config.js'))
+  const outputConfigOwn = outputConfig(resolveOwn('react.config.js'))
   module.exports = {
     dotenv: resolveOwn(`${templatePath}/.env`),
     appPath: resolveApp('.'),
-    // appBuild: resolveOwn('../../build'),
-    appBuild: resolveOwn(`../../${beforePublishConfig.outputdir}`),
+    appBuild: resolveOwn(outputConfigOwn.outputdir),
     appPublic: resolveOwn(`${templatePath}/public`),
     appHtml: resolveOwn(`${templatePath}/public/index.html`),
     appIndexJs: resolveModule(resolveOwn, `${templatePath}/src/index`),
@@ -171,9 +186,10 @@ if (
     yarnLockFile: resolveOwn(`${templatePath}/yarn.lock`),
     testsSetup: resolveModule(resolveOwn, `${templatePath}/src/setupTests`),
     proxySetup: resolveOwn(`${templatePath}/src/setupProxy.js`),
-    proxyReactConfig: beforePublishConfig.proxyReactConfig,
+    proxyReactConfig: proxyReactConfig,
     appNodeModules: resolveOwn('node_modules'),
-    publicUrlOrPath,
+    publicUrl: getPublicUrl(resolveOwn('package.json')),
+    servedPath: getServedPath(resolveOwn('package.json')),
     // These properties only exist before ejecting:
     ownPath: resolveOwn('.'),
     ownNodeModules: resolveOwn('node_modules'),

@@ -41,7 +41,8 @@ function isInMercurialRepository() {
   }
 }
 
-function tryGitInit() {
+function tryGitInit(appPath) {
+  let didInit = false;
   try {
     execSync('git --version', { stdio: 'ignore' });
     if (isInGitRepository() || isInMercurialRepository()) {
@@ -49,33 +50,26 @@ function tryGitInit() {
     }
 
     execSync('git init', { stdio: 'ignore' });
-    return true;
-  } catch (e) {
-    console.warn('Git repo not initialized', e);
-    return false;
-  }
-}
+    didInit = true;
 
-function tryGitCommit(appPath) {
-  try {
     execSync('git add -A', { stdio: 'ignore' });
-    execSync('git commit -m "Initialize project using Create React App"', {
+    execSync('git commit -m "Initial commit from Create React App"', {
       stdio: 'ignore',
     });
     return true;
   } catch (e) {
-    // We couldn't commit in already initialized git repo,
-    // maybe the commit author config is not set.
-    // In the future, we might supply our own committer
-    // like Ember CLI does, but for now, let's just
-    // remove the Git files to avoid a half-done state.
-    console.warn('Git commit not created', e);
-    console.warn('Removing .git directory...');
-    try {
-      // unlinkSync() doesn't work on directories.
-      fs.removeSync(path.join(appPath, '.git'));
-    } catch (removeErr) {
-      // Ignore.
+    if (didInit) {
+      // If we successfully initialized but couldn't commit,
+      // maybe the commit author config is not set.
+      // In the future, we might supply our own committer
+      // like Ember CLI does, but for now, let's just
+      // remove the Git files to avoid a half-done state.
+      try {
+        // unlinkSync() doesn't work on directories.
+        fs.removeSync(path.join(appPath, '.git'));
+      } catch (removeErr) {
+        // Ignore.
+      }
     }
     return false;
   }
@@ -261,15 +255,6 @@ module.exports = function(
     );
   }
 
-  // Initialize git repo
-  let initializedGit = false;
-
-  if (tryGitInit()) {
-    initializedGit = true;
-    console.log();
-    console.log('Initialized a git repository.');
-  }
-
   let command;
   let remove;
   let args;
@@ -331,10 +316,9 @@ module.exports = function(
     return;
   }
 
-  // Create git commit if git repo was initialized
-  if (initializedGit && tryGitCommit(appPath)) {
+  if (tryGitInit(appPath)) {
     console.log();
-    console.log('Created git commit.');
+    console.log('Initialized a git repository.');
   }
 
   // Display the most elegant way to cd.
