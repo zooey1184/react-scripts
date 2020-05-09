@@ -122,7 +122,7 @@ checkBrowsers(paths.appPath, isInteractive)
       webpack,
     });
     // Load proxy config
-    const proxySetting = require(paths.appPackageJson).proxy;
+    const proxySetting = require(paths.appPackageJson).proxy || paths.proxyReactConfig;
     const proxyConfig = prepareProxy(
       proxySetting,
       paths.appPublic,
