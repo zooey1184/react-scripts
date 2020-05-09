@@ -177,7 +177,7 @@ if (
     yarnLockFile: resolveOwn(`${templatePath}/yarn.lock`),
     testsSetup: resolveModule(resolveOwn, `${templatePath}/src/setupTests`),
     proxySetup: resolveOwn(`${templatePath}/src/setupProxy.js`),
-    proxyReactConfig: proxyReactConfig,
+    proxyReactConfig: outputConfigOwn.proxyReactConfig,
     appNodeModules: resolveOwn('node_modules'),
     publicUrlOrPath,
     // These properties only exist before ejecting:
