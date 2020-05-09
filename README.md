@@ -1,6 +1,12 @@
 # 对应 react-scripts 版本 3.3.1
 >暂不支持react-scripts3.3.0以下的，如果使用create-react-app创建的项目里面react-scripts 版本是3.3.0可能导致版本冲突不能使用z-react-scripts 命令行
 
+
+|  当前版本 | react-script 对应版本 |
+|:---------:|:---------------------:|
+| 1.1.1     |  3.3.1                |
+
+
 ```sh
 # 使用方式同react-scripts
 
@@ -148,3 +154,8 @@ Please refer to its documentation:
 
 - [Getting Started](https://facebook.github.io/create-react-app/docs/getting-started) – How to create a new app.
 - [User Guide](https://facebook.github.io/create-react-app/) – How to develop apps bootstrapped with Create React App.
+
+修改原文件
+path
+webpack.config.js
++ dealConfig.js
