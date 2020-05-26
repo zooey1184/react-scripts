@@ -33,7 +33,7 @@ const ModuleNotFoundPlugin = require('react-dev-utils/ModuleNotFoundPlugin');
 const ForkTsCheckerWebpackPlugin = require('react-dev-utils/ForkTsCheckerWebpackPlugin');
 const typescriptFormatter = require('react-dev-utils/typescriptFormatter');
 // 添加对应的方法
-const {getEntryConfig, getResolve, getModule, getPlugins, getSourcemap} = require('./dealConfig')
+const {getEntryConfig, getResolve, getModule, getPlugins, getSourcemap, useBabelConfig, useBabelrc} = require('./dealConfig')
 
 
 // @remove-on-eject-begin
@@ -439,8 +439,8 @@ module.exports = function(webpackEnv) {
                   'babel-preset-react-app/webpack-overrides'
                 ),
                 // @remove-on-eject-begin
-                babelrc: false,
-                configFile: false,
+                babelrc: useBabelrc,
+                configFile: useBabelConfig,
                 presets: [require.resolve('babel-preset-react-app')],
                 // Make sure we have a unique cache identifier, erring on the
                 // side of caution.
@@ -488,8 +488,8 @@ module.exports = function(webpackEnv) {
               exclude: /@babel(?:\/|\\{1,2})runtime/,
               loader: require.resolve('babel-loader'),
               options: {
-                babelrc: false,
-                configFile: false,
+                babelrc: useBabelrc,
+                configFile: useBabelConfig,
                 compact: false,
                 presets: [
                   [

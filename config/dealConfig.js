@@ -122,6 +122,11 @@ const getSourcemap = () => {
   }
   return sourceMap
 }
+
+// 是否使用babelrc babelConfig
+const useBabelrc = () => (reactConfig.useBabelrc || false)
+const useBabelConfig = ()=> (reactConfig.useBabelConfig || false)
+
 module.exports = {
   getReactConfig,
   getEntryConfig,
@@ -130,5 +135,7 @@ module.exports = {
   getPlugins,
   getPort,
   getPublicPath,
-  getSourcemap
+  getSourcemap,
+  useBabelrc,
+  useBabelConfig
 }
