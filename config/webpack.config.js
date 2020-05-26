@@ -77,7 +77,7 @@ module.exports = function(webpackEnv) {
 
   /******************** html && entry start *****************/
   // 获取入口文件
-  const Entry = getEntryConfig(isEnvProduction)
+  const Entry = getEntryConfig(isEnvDevelopment)
   const getEntry = () => {
     let entry = {}
     for (let i in Entry) {
