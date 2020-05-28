@@ -62,7 +62,8 @@ const config = {
    * string 文件入口
    * object {path, filename?} path=> 文件夹入口  filename => 最终访问形式
    * filename 默认index.html
-   * 可配置多入口
+   * 可配置多入口 
+   * 特别注意如果配置的是多入口  请保证有一个是main的入口  否则不生效
    */
   entry: {
     main: path.join(__dirname, './src/index.js'),
@@ -97,6 +98,7 @@ const config = {
      * rules: object[] loader规则配置
      * 默认支持less，sass以及module导入
      * sass需要node>12.0
+     * 如果rules 是一个函数 能够让开发者更细粒度的操作rules  需要返回 <ruleLoaders>[]
      */
     rules: []
   },
