@@ -143,7 +143,13 @@ const config = {
    * outputDir: string 打包导出目录
    * 默认 build 文件夹
    */
-  outputDir: 'build'
+  outputDir: 'build',
+  
+  /* 可以使用.babelrc 配置 */
+  // useBabelrc: true,
+
+  /* 可以使用babel.config.js */
+  // useBabelConfig: true,
 }
 
 module.exports = config
