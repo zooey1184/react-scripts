@@ -362,25 +362,28 @@ module.exports = function(webpackEnv) {
           },
           {
             test: lessRegex,
-            exclude: cssModuleRegex,
-            use: getStyleLoaders({
-              importLoaders: 1,
-              sourceMap: isEnvProduction && shouldUseSourceMap,
-              modules: {
-                getLocalIdent: getCSSModuleLocalIdent,
+            exclude: lessModuleRegex,
+            use: getStyleLoaders(
+              {
+                importLoaders: 3,
+                sourceMap: isEnvProduction && shouldUseSourceMap,
               },
-            }),
+              'less-loader'
+            ),
             sideEffects: true,
           },
           {
             test: lessModuleRegex,
-            use: getStyleLoaders({
-              importLoaders: 1,
-              sourceMap: isEnvProduction && shouldUseSourceMap,
-              modules: {
-                getLocalIdent: getCSSModuleLocalIdent,
+            use: getStyleLoaders(
+              {
+                importLoaders: 3,
+                sourceMap: isEnvProduction && shouldUseSourceMap,
+                modules: {
+                  getLocalIdent: getCSSModuleLocalIdent,
+                },
               },
-            }),
+              'less-loader'
+            ),
           },
           // Opt-in support for SASS (using .scss or .sass extensions).
           // By default we support SASS Modules with the
