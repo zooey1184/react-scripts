@@ -52,7 +52,6 @@ const outputConfig = (p)=> {
   }
 }
 const {outputdir, proxyReactConfig} = outputConfig(resolveApp('react.config.js'))
-/********************** output config end **************************/
 
 // We use `PUBLIC_URL` environment variable or "homepage" field to infer
 // "public path" at which the app is served.
@@ -108,11 +107,12 @@ module.exports = {
   appJsConfig: resolveApp('jsconfig.json'),
   // need add react.config.js
   reactConfig: resolveApp('react.config.js'),
+
   yarnLockFile: resolveApp('yarn.lock'),
   testsSetup: resolveModule(resolveApp, 'src/setupTests'),
   proxySetup: resolveApp('src/setupProxy.js'),
-  proxyReactConfig: proxyReactConfig,
   appNodeModules: resolveApp('node_modules'),
+  swSrc: resolveModule(resolveApp, 'src/service-worker'),
   publicUrlOrPath,
 };
 
@@ -137,8 +137,8 @@ module.exports = {
   yarnLockFile: resolveApp('yarn.lock'),
   testsSetup: resolveModule(resolveApp, 'src/setupTests'),
   proxySetup: resolveApp('src/setupProxy.js'),
-  proxyReactConfig: proxyReactConfig,
   appNodeModules: resolveApp('node_modules'),
+  swSrc: resolveModule(resolveApp, 'src/service-worker'),
   publicUrlOrPath,
   // These properties only exist before ejecting:
   ownPath: resolveOwn('.'),
@@ -174,11 +174,12 @@ if (
     appJsConfig: resolveOwn(`${templatePath}/jsconfig.json`),
     // 需添加react.config.js  path
     reactConfig: resolveApp(`${templatePath}/react.config.js`),
+    
     yarnLockFile: resolveOwn(`${templatePath}/yarn.lock`),
     testsSetup: resolveModule(resolveOwn, `${templatePath}/src/setupTests`),
     proxySetup: resolveOwn(`${templatePath}/src/setupProxy.js`),
-    proxyReactConfig: outputConfigOwn.proxyReactConfig,
     appNodeModules: resolveOwn('node_modules'),
+    swSrc: resolveModule(resolveOwn, `${templatePath}/src/service-worker`),
     publicUrlOrPath,
     // These properties only exist before ejecting:
     ownPath: resolveOwn('.'),

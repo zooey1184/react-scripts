@@ -6,14 +6,6 @@
  * LICENSE file in the root directory of this source tree.
  */
 // @remove-on-eject-end
-
-/**
- * process.env 是否有这个配置
- * SSL_CRT_FILE, => 相对当前项目根路径的相对路径
- * SSL_KEY_FILE, => 相对当前项目根路径的相对路径
- * HTTPS => true
- */
-
 'use strict';
 
 const fs = require('fs');
